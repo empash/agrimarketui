@@ -9,6 +9,14 @@ class FarmerSubsidy extends StatefulWidget {
 }
 
 class _FarmerSubsidyState extends State<FarmerSubsidy> {
+  final List subsidyList = [
+    {'name': 'Thresher', 'type': 'Machine', 'location': 'Rampur'},
+    {'name': 'WaterPump', 'type': 'Machine', 'location': 'Udayapur'},
+    {'name': 'Urea', 'type': 'Fertilizer', 'location': 'Beltar'},
+    {'name': 'Wheat Seed', 'type': 'Seedling', 'location': 'Dhampur'},
+    {'name': 'DAP', 'type': 'Fertilizer', 'location': 'Dhaman'},
+  ];
+
   void _handleTap(BuildContext context) {
     bool successHire = false;
     // make request to backend
@@ -65,7 +73,7 @@ class _FarmerSubsidyState extends State<FarmerSubsidy> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.separated(
-        itemCount: 15,
+        itemCount: subsidyList.length,
         padding: const EdgeInsets.all(10),
         separatorBuilder: (BuildContext context, int index) {
           return const SizedBox(height: 8.0);
@@ -80,23 +88,23 @@ class _FarmerSubsidyState extends State<FarmerSubsidy> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Thresher',
+                      subsidyList[index]['name'],
                       style: Styles.primaryHeader,
                     ),
                     Text(
-                      'Type: Machines',
+                      'Type: ${subsidyList[index]['type']}',
                       style: Styles.smallGrey,
                     ),
+                    // Text(
+                    //   'Price: Rs.10000',
+                    //   style: Styles.smallGrey,
+                    // ),
                     Text(
-                      'Price: Rs.10000',
-                      style: Styles.smallGrey,
-                    ),
-                    Text(
-                      'Location: ABC Street, Koshi',
+                      'Location: ${subsidyList[index]['location']}',
                       style: Styles.smallGrey,
                     ),
                   ],

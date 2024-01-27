@@ -86,12 +86,14 @@ class _ServiceProviderReportState extends State<ServiceProviderReport> {
                         style: Styles.primaryHeader,
                       ),
                       const Text(
-                        'Problem:',
+                        'Problem',
                         style: Styles.smallHighlight,
                       ),
                       Text(
                         servicesList[index]['problem'],
                         style: Styles.smallGrey,
+                        maxLines: 5,
+                        softWrap: true,
                       ),
                       Text(
                         'Phonenumber: ${servicesList[index]['phone']}',
