@@ -59,25 +59,44 @@ class _LoginScreenState extends State<LoginScreen> {
       _toggleLoading(false);
 
       var result = jsonDecode(response.body);
-      user.setUser = {
-        'name': result['name'].toString(),
-        'id': result['id'].toString(),
-      };
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(success ? 'Login Successfully' : 'Invalid Credentials'),
-        ));
-        if (!success) return;
-        if (widget.userType.toLowerCase() == 'farmer') {
+        if (widget.userType.toLowerCase() == 'farmer' &&
+            result['useType'] == 'farmer') {
+          user.setUser = {
+            'name': result['name'].toString(),
+            'id': result['id'].toString(),
+            'userType': result['useType'].toString(),
+          };
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Login Successfully'),
+          ));
+
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const FarmerScreen()));
+          return;
         }
 
-        if (widget.userType.toLowerCase() == 'service provider') {
+        if (widget.userType.toLowerCase() == 'service provider' &&
+            result['useType'] == 'servicerequest') {
+          user.setUser = {
+            'name': result['name'].toString(),
+            'id': result['id'].toString(),
+            'userType': result['useType'].toString(),
+          };
+
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Login Successfully'),
+          ));
+
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const ServiceProviderScreen()));
+          return;
         }
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('User not found for ${widget.userType}'),
+        ));
       }
     } catch (e) {
       if (context.mounted) {

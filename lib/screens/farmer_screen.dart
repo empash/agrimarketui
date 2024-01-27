@@ -10,6 +10,7 @@ import 'package:agrimarket/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart' as html;
 
 class FarmerScreen extends StatefulWidget {
   const FarmerScreen({Key? key}) : super(key: key);
@@ -70,9 +71,7 @@ class _FarmerScreenState extends State<FarmerScreen> {
       if (response.statusCode == 200) {
         _showResponseDialog('Image uploaded successfully', result['message']);
       } else {
-        _showResponseDialog(
-            'Failed to upload image. Status code: ${response.statusCode}',
-            result['message']);
+        _showResponseDialog('Image Scan Results', result['message']);
       }
     } catch (e) {
       _showResponseDialog('Error uploading image: $e', '');
@@ -87,7 +86,7 @@ class _FarmerScreenState extends State<FarmerScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
-          content: Text(content),
+          content: html.HtmlWidget(content),
           actions: <Widget>[
             TextButton(
               onPressed: () {

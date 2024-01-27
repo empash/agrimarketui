@@ -2,20 +2,18 @@ import 'dart:convert';
 
 import 'package:agrimarket/constants/consts.dart';
 import 'package:agrimarket/constants/styles.dart';
-import 'package:agrimarket/providers/user.dart';
 import 'package:agrimarket/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
-class FarmerReports extends StatefulWidget {
-  const FarmerReports({Key? key}) : super(key: key);
+class ServiceProviderReport extends StatefulWidget {
+  const ServiceProviderReport({Key? key}) : super(key: key);
 
   @override
-  State<FarmerReports> createState() => _FarmerReportsState();
+  State<ServiceProviderReport> createState() => _ServiceProviderReportState();
 }
 
-class _FarmerReportsState extends State<FarmerReports> {
+class _ServiceProviderReportState extends State<ServiceProviderReport> {
   List servicesList = [];
 
   bool isLoading = false;
@@ -28,10 +26,10 @@ class _FarmerReportsState extends State<FarmerReports> {
     });
   }
 
-  void getServiceList(String id) async {
+  void getServiceList() async {
     _toggleLoading(true);
 
-    var url = Uri.https(Constants.rootUrl, '/api/v1/user/$id/reports');
+    var url = Uri.https(Constants.rootUrl, '/api/v1/reports');
 
     var response = await http.get(url);
     // if (response.statusCode == 200) {
@@ -48,16 +46,12 @@ class _FarmerReportsState extends State<FarmerReports> {
 
   @override
   void initState() {
-    User user = Provider.of<User>(context, listen: false);
-
     super.initState();
-    getServiceList(user.getUser['id']);
+    getServiceList();
   }
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context, listen: false);
-
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -69,36 +63,6 @@ class _FarmerReportsState extends State<FarmerReports> {
       ),
       body: Column(
         children: [
-          if (servicesList.isEmpty)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.report_sharp, // Replace with your desired icon
-                  size: 100.0,
-                  color: Colors.grey[600],
-                ),
-                const SizedBox(height: 16.0),
-                const Text(
-                  'No Reports Yet',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'It seems there are no reports to display at the moment. Why not create a new report and request your needs?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
           Expanded(
             child: ListView.separated(
               itemCount: servicesList.length,

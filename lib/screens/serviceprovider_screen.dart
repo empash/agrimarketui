@@ -4,6 +4,7 @@ import 'package:agrimarket/providers/user.dart';
 import 'package:agrimarket/screens/home_screen.dart';
 import 'package:agrimarket/screens/serviceprovider_manage.dart';
 import 'package:agrimarket/screens/serviceprovider_market.dart';
+import 'package:agrimarket/screens/serviceprovider_reports.dart';
 import 'package:agrimarket/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -151,6 +152,7 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
                   IconButton(
                       onPressed: () {
                         // remove user
+                        user.removeUser();
                         // navigate
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const HomeScreen()));
@@ -309,7 +311,7 @@ class _ServiceProviderScreenState extends State<ServiceProviderScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ServiceProviderManage()));
+                      builder: (context) => const ServiceProviderReport()));
                 },
                 child: Container(
                   padding:

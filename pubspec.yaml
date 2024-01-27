@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_widget_from_html: ^0.14.11
   geolocator: ^10.1.0
   http: ^1.2.0
   image_picker: ^1.0.7

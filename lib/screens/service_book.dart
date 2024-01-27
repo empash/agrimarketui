@@ -205,6 +205,36 @@ class _ServiceBookState extends State<ServiceBook> {
             //     },
             //   ),
             // ),
+            if (servicesList.isEmpty)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.article, // Replace with your desired icon
+                    size: 100.0,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    'No Services Yet',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'It seems there are no services to display at the moment. Why not create a new service and request your needs?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
             Expanded(
               child: ListView.separated(
                 itemCount: servicesList.length,

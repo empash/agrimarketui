@@ -1,6 +1,4 @@
-import 'package:agrimarket/screens/farmer_screen.dart';
 import 'package:agrimarket/screens/login_screen.dart';
-import 'package:agrimarket/screens/serviceprovider_screen.dart';
 import 'package:agrimarket/widgets/button.dart';
 import 'package:flutter/material.dart';
 

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:agrimarket/providers/user.dart';
+import 'package:agrimarket/screens/crops_list.dart';
 import 'package:agrimarket/screens/farmer_reports.dart';
 import 'package:agrimarket/screens/home_screen.dart';
 import 'package:agrimarket/screens/report_screen.dart';
+import 'package:agrimarket/screens/weather_forecast.dart';
 import 'package:agrimarket/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,20 +19,17 @@ class FarmerDashboard extends StatefulWidget {
   State<FarmerDashboard> createState() => _FarmerDashboardState();
 }
 
-class _FarmerDashboardState extends State<FarmerDashboard> {
+class _FarmerDashboardState extends State<FarmerDashboard>
+    with SingleTickerProviderStateMixin {
   String weatherDescription = 'Sunny';
   String temperature = '32';
   String location = 'Aambari, Urlabari';
 
-  @override
-  void initState() {
-    super.initState();
-    // _getCurrentLocation(); // returns location
-    _getCurrentLocationWeather();
-  }
+  late AnimationController _rotationController;
 
   Future<void> _getCurrentLocationWeather() async {
     try {
+      await _rotationController.forward(from: 0);
       // Check if location services are enabled
       bool isLocationServiceEnabled =
           await Geolocator.isLocationServiceEnabled();
@@ -61,7 +60,6 @@ class _FarmerDashboardState extends State<FarmerDashboard> {
       double latitude = position.latitude;
       double longitude = position.longitude;
 
-      // API Key from OpenWeatherMap (sign up for a free account to get your API key)
       String apiKey = 'bb6a8d7456e24798a1df62d1b67d1205';
 
       // API endpoint for current weather data
@@ -84,6 +82,8 @@ class _FarmerDashboardState extends State<FarmerDashboard> {
       }
     } catch (e) {
       _showErrorSnackBar('Error fetching weather data');
+    } finally {
+      _rotationController.reverse();
     }
   }
 
@@ -97,25 +97,62 @@ class _FarmerDashboardState extends State<FarmerDashboard> {
   }
 
   IconData _getWeatherIcon() {
-    switch (weatherDescription.toLowerCase()) {
-      case 'clear':
-        return Icons.wb_sunny;
-      case 'clouds':
-        return Icons.cloud;
-      case 'rain':
-        return Icons.beach_access; // Replace with a rain icon of your choice
-      case 'thunderstorm':
-        return Icons.flash_on;
-      case 'snow':
-        return Icons.ac_unit;
-      case 'moderate rain':
-        return Icons
-            .grain; // Replace with an appropriate icon for moderate rain
-      // Add more cases for different weather conditions as needed
-      default:
-        return Icons
-            .wb_sunny; // Default to a sunny icon if the weather condition is unknown
+    String lowercaseDescription = weatherDescription.toLowerCase();
+
+    if (lowercaseDescription.contains('clear') ||
+        lowercaseDescription.contains('clear sky')) {
+      return Icons.wb_sunny;
+    } else if (lowercaseDescription.contains('few clouds')) {
+      return Icons
+          .cloud_queue; // You can replace with the appropriate icon for few clouds
+    } else if (lowercaseDescription.contains('scattered clouds')) {
+      return Icons
+          .cloud_queue; // You can replace with the appropriate icon for scattered clouds
+    } else if (lowercaseDescription.contains('clouds') ||
+        lowercaseDescription.contains('overcast')) {
+      return Icons.cloud;
+    } else if (lowercaseDescription.contains('rain') ||
+        lowercaseDescription.contains('drizzle') ||
+        lowercaseDescription.contains('showers')) {
+      return Icons.beach_access; // Replace with a rain icon of your choice
+    } else if (lowercaseDescription.contains('thunderstorm')) {
+      return Icons.flash_on;
+    } else if (lowercaseDescription.contains('snow') ||
+        lowercaseDescription.contains('sleet') ||
+        lowercaseDescription.contains('hail')) {
+      return Icons.ac_unit;
+    } else if (lowercaseDescription.contains('mist') ||
+        lowercaseDescription.contains('fog')) {
+      return Icons.wb_cloudy;
+    } else if (lowercaseDescription.contains('smoke') ||
+        lowercaseDescription.contains('dust') ||
+        lowercaseDescription.contains('sand') ||
+        lowercaseDescription.contains('ash')) {
+      return Icons.wb_incandescent;
+    } else if (lowercaseDescription.contains('squalls')) {
+      return Icons.wb_cloudy;
+    } else if (lowercaseDescription.contains('tornado')) {
+      return Icons.warning;
+    } else {
+      return Icons
+          .wb_sunny; // Default to a sunny icon if the weather condition is unknown
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _getCurrentLocationWeather();
+  }
+
+  @override
+  void dispose() {
+    _rotationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -208,19 +245,60 @@ class _FarmerDashboardState extends State<FarmerDashboard> {
                   color: Colors.yellow,
                 ),
                 // Add a Refresh button
-                TextButton(
-                  onPressed: () {
-                    _getCurrentLocationWeather;
-                  },
-                  child: const Icon(
-                    Icons.refresh,
-                    color: Colors.white,
+                RotationTransition(
+                  turns: _rotationController,
+                  child: GestureDetector(
+                    onTap: () {
+                      _getCurrentLocationWeather();
+                    },
+                    child: const Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
 
+          const SizedBox(
+            height: 15,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const WeatherForecast()));
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black12,
+                  width: .5,
+                ),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.cloud,
+                    size: 40,
+                    color: Colors.lightBlue,
+                  ),
+                  MyText(
+                      text: 'Weather Forecast',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                  Icon(
+                    Icons.arrow_forward,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
           const SizedBox(
             height: 15,
           ),
@@ -286,6 +364,44 @@ class _FarmerDashboardState extends State<FarmerDashboard> {
                   ),
                   MyText(
                       text: 'View Reports',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                  Icon(
+                    Icons.arrow_forward,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const CropsList()));
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black12,
+                  width: .5,
+                ),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.forest,
+                    size: 40,
+                    color: Colors.lightGreen,
+                  ),
+                  MyText(
+                      text: 'Crop Listings',
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: Colors.black),

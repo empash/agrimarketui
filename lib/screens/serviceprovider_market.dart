@@ -106,30 +106,86 @@ class _ServiceProviderMarketState extends State<ServiceProviderMarket> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              const Row(
+                              Row(
                                 children: [
                                   ElevatedButton(
-                                    onPressed: null,
-                                    style: ButtonStyle(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Are you sure want to accept it?'),
+                                              content: const Text(
+                                                  'Choose OK to accept and abort to reject the changes.'),
+                                              actions: [
+                                                TextButton(
+                                                  child: const Text("Ok"),
+                                                  onPressed: () {
+                                                    // continueCallBack();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: const Text("Cancel"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+
+                                                    // continueCallBack();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    style: const ButtonStyle(
                                       backgroundColor: MaterialStatePropertyAll(
                                           Colors.green),
                                     ),
-                                    child: MyText(
+                                    child: const MyText(
                                         text: 'Accept',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
                                         color: Colors.white),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   ElevatedButton(
-                                    onPressed: null,
-                                    style: ButtonStyle(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Are you sure want to reject it?'),
+                                              content: const Text(
+                                                  'Choose OK to reject and cancel to abort the changes.'),
+                                              actions: [
+                                                TextButton(
+                                                  child: const Text("Ok"),
+                                                  onPressed: () {
+                                                    // continueCallBack();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: const Text("Cancel"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+
+                                                    // continueCallBack();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    style: const ButtonStyle(
                                       backgroundColor:
                                           MaterialStatePropertyAll(Colors.red),
                                     ),
-                                    child: MyText(
+                                    child: const MyText(
                                         text: 'Reject',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
