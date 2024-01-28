@@ -86,7 +86,7 @@ class _FarmerScreenState extends State<FarmerScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
-          content: html.HtmlWidget(content),
+          content: SingleChildScrollView(child: html.HtmlWidget(content)),
           actions: <Widget>[
             TextButton(
               onPressed: () {
